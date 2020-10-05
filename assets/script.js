@@ -5,21 +5,46 @@ $(document).ready(function() {
     // format and display current date
     var cTime = moment().format("dddd, MMMM Do")
     $("#currentDay").append(cTime)
-    
-    
 
+    // current hour 
+    var presentHour = moment().format("hA")
+
+    // list of hours used in agenda
+    var businessHours = ["9AM", "10AM", "11AM", "Noon", "1PM", "2PM", "3PM", "4PM", "5PM"]
+
+//    check local storage to recall previously saved text to add back to agenda
+    var storedAgenda = JSON.parse(localStorage.getItem("agendaSave"));
+    console.log(storedAgenda.hour + " <<hour -- text >> " + storedAgenda.text)
+
+    // loop to set previously saved agenda
+   for (var i = 0; i < businessHours.length; i++) {
+        var updateAgenda = $("textarea").filter('"#' + businessHours[i] + '"')
+        updateAgenda.text(storedAgenda.text)
+        console.log(updateAgenda.text, "updateAgenda")
+        $("textarea").append(updateAgenda)
+       
+   }
+
+//    onClick function to save text and hour selected to local storage 
     $(".saveBtn").click(function() {
-       console.log(this.id, "this")
        
-       
-        // var agendaSave = {
-        //     text: $(this).before("textarea").text,
-        //     hour: $("textarea").before("p").text
-        // }
-        // window.localStorage.setItem("savedText", JSON.stringify(agendaSave))
-        // console.log(agendaSave)
+        var textSave = $.trim($(this).siblings("textarea").val());
+        console.log(textSave, "textSave")
+
+        var agendaSave = {
+            text: textSave,
+            hour: this.id,
+                }
+        console.log(agendaSave, "agendaSave")
+        window.localStorage.setItem("agendaSave", JSON.stringify(agendaSave))
+        
     })
 
+    // apply class based on current hour, previous hours, and future hours
+    // for (var i = 0; i < businessHours.length; i++) {
+    //     var updateAgenda = $("textarea").find(businessHours[i])
+        
+    // }
 
 })
 
