@@ -7,18 +7,16 @@ $(document).ready(function() {
     $("#currentDay").append(cTime)
 
     // current hour 
-    var presentHour = moment().format("hA")
     var milHour = moment().format("HH")
-    console.log(presentHour, "presentHour")
-    console.log(milHour, "milHour")
-    // list of hours used in agenda
-    var businessHours = ["9AM", "10AM", "11AM", "Noon", "1PM", "2PM", "3PM", "4PM", "5PM"]
-    var businessHoursMil = ["9", "10", "11", "12", "13", "14", "15", "16", "17"]
+
+    // list of hours used in agenda 
+    var businessHoursMil = ["09", "10", "11", "12", "13", "14", "15", "16", "17"]
 
 //    check local storage to recall previously saved text to add back to agenda
     var storedAgenda = JSON.parse(localStorage.getItem("agendaSave")) || [] ;
     console.log(storedAgenda, "storedAgenda")
-    // loop to set previously saved agenda
+   
+    // loop to reapply any saved agenda items from local storage
     for (var i = 0; i < storedAgenda.length; i++) {
         var hour = storedAgenda[i].hour;
         var textBlock = $("#text-" + hour)
@@ -26,19 +24,15 @@ $(document).ready(function() {
         $("#text-" + hour).append(textBlock)
     }
 
-//    onClick function to save text and hour selected to local storage 
+//    onClick function to save text and hour selected to local storage
     $(".saveBtn").click(function() {
-        // var storedAgenda = JSON.parse(localStorage.getItem("agendaSave") || '[]');
         var textSave = $.trim($(this).siblings("textarea").val());
-        console.log(textSave, "textSave")
         var newSave = {text: textSave, hour: this.id}
-        console.log(newSave, "newSave")
         storedAgenda.push(newSave)
         window.localStorage.setItem("agendaSave", JSON.stringify(storedAgenda))
     })
 
-    // apply class based on current hour, previous hours, and future hours
-    
+    // apply color by class based on current hour
     for (var i = 0; i < businessHoursMil.length; i++) {
     if (milHour == businessHoursMil[i]) {
         var updateClass = $("." + businessHoursMil[i]);
@@ -47,6 +41,7 @@ $(document).ready(function() {
     } 
     }
 
+    // apply color by class based on previous hours
     for (var i = 0; i < businessHoursMil.length; i++) {
     if (milHour > businessHoursMil[i]) {
         var updateClass = $("." + businessHoursMil[i]);
@@ -55,13 +50,13 @@ $(document).ready(function() {
     }
     }
 
+    // apply color by class based on future hours
     for (var i = 0; i < businessHoursMil.length; i++) {
-    if (milHour < businessHoursMil[i].charAt(0)) {
-        var updateClass = $("." + businessHours[i]);
+    if (milHour < businessHoursMil[i]) {
+        var updateClass = $("." + businessHoursMil[i]);
         updateClass.addClass("future");
         $("." + businessHoursMil[i]).append(updateClass)
     }
     }
-
 })
 
