@@ -16,32 +16,25 @@ $(document).ready(function() {
     var businessHoursMil = ["9", "10", "11", "12", "13", "14", "15", "16", "17"]
 
 //    check local storage to recall previously saved text to add back to agenda
-    var storedAgenda = JSON.parse(localStorage.getItem("agendaSave") || '[]');
-       console.log(storedAgenda, "storedAgenda")
+    var storedAgenda = JSON.parse(localStorage.getItem("agendaSave")) || [] ;
+    console.log(storedAgenda, "storedAgenda")
     // loop to set previously saved agenda
-   for (var i = 0; i < businessHours.length; i++) {
-        
-        if (storedAgenda.hour != businessHours[i]) {
-            
-        } else {
-        var updateAgenda = $("#text-" + businessHours[i])
-        updateAgenda.text(storedAgenda.text)
-        console.log(updateAgenda.text, "updateAgenda")
-        $("#text-" + businessHours[i]).append(updateAgenda)
-   }}
-
-
+    for (var i = 0; i < storedAgenda.length; i++) {
+        var hour = storedAgenda[i].hour;
+        var textBlock = $("#text-" + hour)
+        textBlock.text(storedAgenda[i].text)
+        $("#text-" + hour).append(textBlock)
+    }
 
 //    onClick function to save text and hour selected to local storage 
     $(".saveBtn").click(function() {
-        var storedAgenda = JSON.parse(localStorage.getItem("agendaSave") || '[]');
+        // var storedAgenda = JSON.parse(localStorage.getItem("agendaSave") || '[]');
         var textSave = $.trim($(this).siblings("textarea").val());
         console.log(textSave, "textSave")
         var newSave = {text: textSave, hour: this.id}
         console.log(newSave, "newSave")
-        $(storedAgenda).push(newSave)
-        // storedAgenda.push(newSave)
-        window.localStorage.setItem("agendaSave", JSON.stringify(newSave))
+        storedAgenda.push(newSave)
+        window.localStorage.setItem("agendaSave", JSON.stringify(storedAgenda))
     })
 
     // apply class based on current hour, previous hours, and future hours
